@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#G#",
+    "GXG",
+    "#G#"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:silver_ingots"
+    },
+    "X": {
+       "item": "ironfurnaces:iron_furnace"
+    },
+    "G": {
+      "tag": "c:glass"
+    }
+  },
+  "result": {
+    "item": "ironfurnaces:silver_furnace"
+  }
+}

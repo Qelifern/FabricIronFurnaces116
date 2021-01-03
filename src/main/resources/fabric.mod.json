@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "ironfurnaces",
+  "version": "${version}",
+
+  "name": "Iron Furnaces",
+  "description": "IronFurnaces is a mod that adds various tiers of metal furnaces that will smelt away to your desires.",
+  "authors": [
+    "Credits: Java, Jetbrains, Minecraft Forge, TechReborn Team\nAuthor: Qelifern (pizzaatime)"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/iron-furnaces/",
+    "sources": "https://github.com/Qelifern/IronFurnaces"
+  },
+
+  "license": "GNU-GENERAL-PUBLIC-LICENSE-Version-3,29-June-2007",
+  "icon": "assets/ironfurnaces/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "rei_plugins": [
+      "ironfurnaces.rei.REIPlugin"
+    ],
+    "main": [
+      "ironfurnaces.IronFurnaces"
+    ],
+    "client": [
+      "ironfurnaces.IronFurnacesClient"
+    ]
+  },
+  "mixins": [
+    "ironfurnaces.mixins.json"
+  ],
+  "depends": {
+    "minecraft": "1.16.x",
+    "fabricloader": ">=0.10.8",
+    "fabric": ">=0.28.3",
+    "team_reborn_energy": ">=0.1.1"
+  }
+}

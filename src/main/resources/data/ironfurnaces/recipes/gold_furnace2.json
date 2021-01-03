@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "#Y#"
+  ],
+  "key": {
+    "Y": {
+      "item": "minecraft:gold_block"
+    },
+    "X": {
+       "item": "ironfurnaces:silver_furnace"
+    },
+    "#": {
+      "tag": "c:glass"
+    }
+  },
+  "result": {
+    "item": "ironfurnaces:gold_furnace"
+  }
+}

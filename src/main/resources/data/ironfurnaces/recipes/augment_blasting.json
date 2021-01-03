@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#R#",
+    "PXP",
+    "#R#"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:stone"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "X": {
+       "item": "minecraft:blast_furnace"
+    }
+  },
+  "result": {
+    "item": "ironfurnaces:augment_blasting"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "#R#",
+    "RXR",
+    "#R#"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:stone"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "X": {
+       "item": "minecraft:comparator"
+    }
+  },
+  "result": {
+    "item": "ironfurnaces:item_heater"
+  }
+}
