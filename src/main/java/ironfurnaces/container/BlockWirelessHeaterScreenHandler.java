@@ -1,16 +1,14 @@
 package ironfurnaces.container;
 
 import ironfurnaces.init.Reference;
-import ironfurnaces.tileentity.BlockWirelessHeaterTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,26 +17,21 @@ import net.minecraft.world.World;
 public class BlockWirelessHeaterScreenHandler extends ScreenHandler {
 
     private final Inventory inventory;
-    private final PropertyDelegate propertyDelegate;
-    private BlockPos pos;
-    protected final World world;
-    public BlockWirelessHeaterTile te;
-    public int capacity = 32000;
+    protected World world;
+    public BlockPos pos;
+    public int capacity = 100000;
 
     public BlockWirelessHeaterScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(1));
+        this(syncId, playerInventory, new SimpleInventory(1));
         pos = buf.readBlockPos();
-        te = (BlockWirelessHeaterTile)playerInventory.player.world.getBlockEntity(pos);
+        world = playerInventory.player.world;
     }
 
-    public BlockWirelessHeaterScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    public BlockWirelessHeaterScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(Reference.WIRELESS_HEATER_SCREEN_HANDLER, syncId);
-        pos = BlockPos.ORIGIN;
         checkSize(inventory, 1);
         this.inventory = inventory;
-        checkDataCount(propertyDelegate, 1);
-        this.propertyDelegate = propertyDelegate;
-        this.world = playerInventory.player.world;
+        inventory.onOpen(playerInventory.player);
 
         this.addSlot(new SlotHeater(inventory,0, 80, 37));
 
@@ -52,18 +45,15 @@ public class BlockWirelessHeaterScreenHandler extends ScreenHandler {
         for(k = 0; k < 9; ++k) {
             this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
-        this.addProperties(this.propertyDelegate);
+        pos = BlockPos.ORIGIN;
     }
 
-    public int getEnergyScaled(int pixels) {
-        int i = this.getEnergy();
-        int j = this.capacity;
-        return j != 0 && i != 0 ? i * pixels / j : 0;
+    public BlockPos getPos() {
+        return pos;
     }
 
-    public int getEnergy()
-    {
-        return this.propertyDelegate.get(0);
+    public World getWorld() {
+        return world;
     }
 
     public boolean canUse(PlayerEntity player) {

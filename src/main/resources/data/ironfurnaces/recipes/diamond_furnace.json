@@ -2,10 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "###",
-    "#X#",
+    "GXG",
     "###"
   ],
   "key": {
+    "G": {
+      "tag": "c:glass"
+    },
     "#": {
       "item": "minecraft:diamond"
     },

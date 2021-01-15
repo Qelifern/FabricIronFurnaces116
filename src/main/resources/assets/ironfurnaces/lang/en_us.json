@@ -64,6 +64,8 @@
     "tooltip.ironfurnaces.heater_block": "Link with a Wireless Heat Receiver",
     "tooltip.ironfurnaces.heater_block1": "(done by placing the receiver in the Transmitter)",
     "tooltip.ironfurnaces.heater_block2": "Provide this block with Energy (TechReborn)",
-    "tooltip.ironfurnaces.heater_block3": "and it will power all Receivers that are bound"
+    "tooltip.ironfurnaces.heater_block3": "and it will power all Receivers that are bound",
+    "tooltip.ironfurnaces.hold": "Hold ",
+    "tooltip.ironfurnaces.for_details": " for Details"
 
 }

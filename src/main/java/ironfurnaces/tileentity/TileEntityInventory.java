@@ -27,19 +27,12 @@ public abstract class TileEntityInventory extends BlockEntity implements ITileIn
         this.inventory = DefaultedList.ofSize(sizeInventory, ItemStack.EMPTY);
     }
 
-
-
+    /**
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(pos, 1, this.getUpdateTag());
+        return new BlockEntityUpdateS2CPacket(pos, 127, this.toTag(new CompoundTag()));
     }
-
-    public CompoundTag getUpdateTag() {
-        CompoundTag compound = new CompoundTag();
-
-        this.toTag(compound);
-        return compound;
-    }
+     **/
 
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
@@ -119,6 +112,7 @@ public abstract class TileEntityInventory extends BlockEntity implements ITileIn
         }
 
     }
+
 
     @Override
     public void fromTag(BlockState state, CompoundTag compound) {

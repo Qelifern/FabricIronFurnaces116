@@ -10,10 +10,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
@@ -24,7 +21,9 @@ public abstract class BlockIronFurnaceScreenHandlerBase extends AbstractRecipeSc
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
     protected final World world;
+    private ServerPlayerEntity player;
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
+
 
     protected BlockIronFurnaceScreenHandlerBase(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory) {
         this(type, syncId, playerInventory, new SimpleInventory(4), new ArrayPropertyDelegate(4));
@@ -38,6 +37,10 @@ public abstract class BlockIronFurnaceScreenHandlerBase extends AbstractRecipeSc
         this.inventory = inventory;
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.world;
+        if (!world.isClient)
+        {
+            this.player = (ServerPlayerEntity) playerInventory.player;
+        }
         this.addSlot(new Slot(inventory, 0, 56, 17));
         this.addSlot(new SlotIronFurnaceFuel(this, this.inventory, 1, 56, 53));
         this.addSlot(new SlotIronFurnace(playerInventory.player, this.inventory, 2, 116, 35));
@@ -55,6 +58,11 @@ public abstract class BlockIronFurnaceScreenHandlerBase extends AbstractRecipeSc
         }
 
         this.addProperties(propertyDelegate);
+    }
+
+    @Override
+    public void addListener(ScreenHandlerListener listener) {
+        super.addListener(listener);
     }
 
     public void populateRecipeFinder(RecipeFinder finder) {

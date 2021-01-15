@@ -37,7 +37,7 @@ import java.util.function.ToIntFunction;
 public abstract class BlockIronFurnaceBase extends Block implements BlockEntityProvider {
 
     public BlockIronFurnaceBase(FabricBlockSettings properties) {
-        super(properties.lightLevel(createLightLevelFromBlockState(13)));
+        super(properties.luminance(createLightLevelFromBlockState(13)));
         this.setDefaultState((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(Properties.HORIZONTAL_FACING, Direction.NORTH)).with(Properties.LIT, false));
     }
 

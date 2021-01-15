@@ -1,7 +1,7 @@
 package ironfurnaces.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import ironfurnaces.items.ItemDurability;
+import ironfurnaces.items.ItemEnergyDisplay;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
@@ -22,9 +22,9 @@ public abstract class MixinItemRenderer {
 
     @Inject(method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("HEAD"))
     private void renderGuiItemOverlay(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String string, CallbackInfo info) {
-        if (stack.getItem() instanceof ItemDurability) {
-            ItemDurability itemDurability = (ItemDurability) stack.getItem();
-            if (!itemDurability.showDurability(stack)) {
+        if (stack.getItem() instanceof ItemEnergyDisplay) {
+            ItemEnergyDisplay energyItem = (ItemEnergyDisplay) stack.getItem();
+            if (!energyItem.showEnergy(stack)) {
                 return;
             }
             RenderSystem.disableDepthTest();
@@ -34,9 +34,10 @@ public abstract class MixinItemRenderer {
 
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder bufferBuilder = tessellator.getBuffer();
-
-            int durability = (int) (13 * (1 - Math.max(0.0, itemDurability.getDurability(stack))));
-            int color = itemDurability.getDurabilityColor(stack);
+            float f = (float)energyItem.getEnergy(stack);
+            float g = (float)energyItem.getMaxEnergy(stack);
+            int durability = Math.round((f * 13.0F) / g);
+            int color = energyItem.getEnergyColor(stack);
 
             this.renderGuiQuad(bufferBuilder, x + 2, y + 13, 13, 2, 0, 0, 0, 255);
             this.renderGuiQuad(bufferBuilder, x + 2, y + 13, durability, 1, color >> 16 & 255, color >> 8 & 255, color & 255, 255);

@@ -1,6 +1,8 @@
 package ironfurnaces.items;
 
+import ironfurnaces.IronFurnacesClient;
 import ironfurnaces.init.Reference;
+import ironfurnaces.util.StringHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -25,15 +27,23 @@ public class ItemHeater extends Item {
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-        if (stack.hasTag()) {
-            tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
-            tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heaterX").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))).append(new LiteralText("" + stack.getTag().getInt("X")).setStyle(Style.EMPTY.withFormatting((Formatting.GRAY)))));
-            tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heaterY").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))).append(new LiteralText("" + stack.getTag().getInt("Y")).setStyle(Style.EMPTY.withFormatting((Formatting.GRAY)))));
-            tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heaterZ").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))).append(new LiteralText("" + stack.getTag().getInt("Z")).setStyle(Style.EMPTY.withFormatting((Formatting.GRAY)))));
-        } else {
-            tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater_not_bound").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
-            tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater_tip").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
-            tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater_tip1").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
+        if (IronFurnacesClient.isShiftKeyDown())
+        {
+            if (stack.hasTag()) {
+                tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
+                tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heaterX").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))).append(new LiteralText("" + stack.getTag().getInt("X")).setStyle(Style.EMPTY.withFormatting((Formatting.GRAY)))));
+                tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heaterY").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))).append(new LiteralText("" + stack.getTag().getInt("Y")).setStyle(Style.EMPTY.withFormatting((Formatting.GRAY)))));
+                tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heaterZ").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))).append(new LiteralText("" + stack.getTag().getInt("Z")).setStyle(Style.EMPTY.withFormatting((Formatting.GRAY)))));
+            } else {
+                tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater_not_bound").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
+                tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater_tip").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
+                tooltip.add(new TranslatableText("tooltip." + Reference.MOD_ID + ".heater_tip1").setStyle(Style.EMPTY.withFormatting((Formatting.GRAY))));
+            }
         }
+        else
+        {
+            tooltip.add(StringHelper.getShiftInfoText());
+        }
+
     }
 }

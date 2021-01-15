@@ -3,6 +3,7 @@ package ironfurnaces.tileentity;
 import ironfurnaces.container.BlockWirelessHeaterScreenHandler;
 import ironfurnaces.init.Reference;
 import ironfurnaces.items.ItemHeater;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,42 +11,50 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyStorage;
 import team.reborn.energy.EnergyTier;
 
-public class BlockWirelessHeaterTile extends TileEntityInventory implements Tickable, ExtendedScreenHandlerFactory, EnergyStorage {
+public class BlockWirelessHeaterTile extends TileEntityInventory implements Tickable, ExtendedScreenHandlerFactory, EnergyStorage, BlockEntityClientSerializable {
 
-    private int energy;
-    private int capacity = 32000;
+    private double energy;
+    private int capacity = 100000;
+
+
 
     public BlockWirelessHeaterTile() {
         super(Reference.WIRELESS_HEATER_TILE, 1);
     }
 
 
-    private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
-        @Override
-        public int get(int index) {
-            return (int)BlockWirelessHeaterTile.this.getStored(EnergySide.UNKNOWN);
-        }
+    public double getEnergy()
+    {
+        return this.energy;
+    }
 
-        @Override
-        public void set(int index, int value) {
-            BlockWirelessHeaterTile.this.setStored(value);
-        }
+    public int getCapacity()
+    {
+        return this.capacity;
+    }
 
-        //this is supposed to return the amount of integers you have in your delegate, in our example only one
-        @Override
-        public int size() {
-            return 1;
-        }
-    };
+
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        this.fromTag(world.getBlockState(pos), tag);
+        world.updateListeners(pos, world.getBlockState(pos).getBlock().getDefaultState(), world.getBlockState(pos), 3);
+        this.markDirty();
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        this.markDirty();
+        return this.toTag(tag);
+    }
 
     @Override
     public void tick() {
@@ -58,7 +67,6 @@ public class BlockWirelessHeaterTile extends TileEntityInventory implements Tick
                 nbt.putInt("X", this.pos.getX());
                 nbt.putInt("Y", this.pos.getY());
                 nbt.putInt("Z", this.pos.getZ());
-
             }
         }
     }
@@ -66,13 +74,15 @@ public class BlockWirelessHeaterTile extends TileEntityInventory implements Tick
     @Override
     public void fromTag(BlockState state, CompoundTag compound) {
         super.fromTag(state, compound);
-        this.energy = compound.getInt("energy");
+        this.energy = compound.getDouble("energy");
+        this.capacity = compound.getInt("capacity");
     }
 
     @Override
     public CompoundTag toTag(CompoundTag compound) {
         super.toTag(compound);
-        compound.putInt("energy", this.energy);
+        compound.putDouble("energy", this.energy);
+        compound.putInt("capacity", this.capacity);
         return compound;
     }
 
@@ -98,7 +108,7 @@ public class BlockWirelessHeaterTile extends TileEntityInventory implements Tick
 
     @Override
     public ScreenHandler IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new BlockWirelessHeaterScreenHandler(i, playerInventory, this, propertyDelegate);
+        return new BlockWirelessHeaterScreenHandler(i, playerEntity.inventory, this);
     }
 
     @Override
@@ -113,15 +123,16 @@ public class BlockWirelessHeaterTile extends TileEntityInventory implements Tick
 
     @Override
     public void setStored(double amount) {
-        energy = (int)amount;
+        energy = amount;
         if (energy > getMaxStoredPower())
         {
-            energy = (int)getMaxStoredPower();
+            energy = getMaxStoredPower();
         }
         if (energy < 0)
         {
             energy = 0;
         }
+        this.markDirty();
     }
 
     @Override
@@ -131,7 +142,15 @@ public class BlockWirelessHeaterTile extends TileEntityInventory implements Tick
 
     @Override
     public EnergyTier getTier() {
-        return EnergyTier.INFINITE;
+        return EnergyTier.INSANE;
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        if (hasWorld() && getWorld() instanceof ServerWorld) {
+            sync();
+        }
     }
 
 }
